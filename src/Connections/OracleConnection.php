@@ -39,13 +39,14 @@ class OracleConnection extends Oci8Connection
         }
 
         $this->setSessionVars($sessionVars);
+        $this->setQueryGrammar(new OracleGrammar());
     }
 
     public function query()
     {
         return new OracleBuilder(
             $this,
-            new OracleGrammar(),
+            $this->getQueryGrammar(),
             $this->getPostProcessor()
         );
     }
