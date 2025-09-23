@@ -9,6 +9,11 @@ use Yajra\Oci8\Oci8Connection;
 
 class OracleConnection extends Oci8Connection
 {
+    /**
+     * @param  PDO|\Closure  $pdo
+     * @param  string  $database
+     * @param  string  $tablePrefix
+     */
     public function __construct($pdo, $database = '', $tablePrefix = '', array $config = [])
     {
         $pdo = (new OracleConnector())->connect($config);
@@ -42,6 +47,9 @@ class OracleConnection extends Oci8Connection
         $this->setQueryGrammar(new OracleGrammar($this));
     }
 
+    /**
+     * Get a new query builder instance.
+     */
     public function query(): OracleBuilder
     {
         return new OracleBuilder(
