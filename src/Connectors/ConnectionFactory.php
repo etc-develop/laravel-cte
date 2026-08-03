@@ -7,9 +7,10 @@ use Illuminate\Database\Connectors\ConnectionFactory as Base;
 use InvalidArgumentException;
 use Staudenmeir\LaravelCte\Connections\MariaDbConnection;
 use Staudenmeir\LaravelCte\Connections\MySqlConnection;
+use Staudenmeir\LaravelCte\Connections\OracleConnection;
 use Staudenmeir\LaravelCte\Connections\PostgresConnection;
-use Staudenmeir\LaravelCte\Connections\SQLiteConnection;
 use Staudenmeir\LaravelCte\Connections\SingleStoreConnection;
+use Staudenmeir\LaravelCte\Connections\SQLiteConnection;
 use Staudenmeir\LaravelCte\Connections\SqlServerConnection;
 
 class ConnectionFactory extends Base
@@ -31,7 +32,7 @@ class ConnectionFactory extends Base
         /** @var (\Closure(\PDO|\Closure, string, string, array<array-key, mixed>): \Illuminate\Database\Connection)|null $resolver */
         $resolver = Connection::getResolver($driver);
 
-        if (!in_array($driver, ['singlestore']) && $resolver) {
+        if (!in_array($driver, ['singlestore', 'oracle']) && $resolver) {
             return $resolver($connection, $database, $prefix, $config); // @codeCoverageIgnore
         }
 
@@ -42,6 +43,7 @@ class ConnectionFactory extends Base
             'sqlite' => new SQLiteConnection($connection, $database, $prefix, $config),
             'sqlsrv' => new SqlServerConnection($connection, $database, $prefix, $config),
             'singlestore' => new SingleStoreConnection($connection, $database, $prefix, $config),
+            'oracle' => new OracleConnection($connection, $database, $prefix, $config),
             default => throw new InvalidArgumentException("Unsupported driver [{$driver}]"),
         };
     }
